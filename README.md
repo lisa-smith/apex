@@ -22,23 +22,23 @@ A mobile-first, adaptive web application for private patrol and parking enforcem
 - **Activity Feed** — Shift-wide log of all officer actions with smart timestamps and date filtering.
 - **Smart Timestamps** — Logs from today display relative time ("45 mins ago"); older logs switch to absolute format ("Mar 8, 2026 · 14:30").
 - **Dark / Light Mode** — Persistent theme preference stored in `localStorage`.
-- **Responsive Layout** — Hamburger drawer on mobile (≥375px), full inline navigation on desktop (≥960px).
+- **Responsive Layout** — Hamburger drawer on mobile (≥375px), full inline navigation on desktop (≥900px).
 - **Demo Mode** — Developer toggle to simulate empty states across the entire application for presentations and QA.
 
 ---
 
 ## Tech Stack
 
-| Technology | Version | Rationale |
-|---|---|---|
-| React | 19 | Concurrent rendering, `use` hook, and improved Suspense support |
-| TypeScript | 5.9 | Enforces domain model integrity and catches API contract drift at compile time |
-| Vite | 7 | Sub-second HMR and optimized production builds with native ESM |
-| Material UI (MUI) | 7 | Accessible, themeable component library with built-in responsive utilities |
-| MUI X Date Pickers | 8 | First-class date input components integrated with the MUI theme system |
-| React Router | 7 | File-based-compatible routing with `Outlet`-driven nested layouts |
-| date-fns | 4 | Modular, tree-shakeable date utilities for relative and absolute timestamp formatting |
-| Emotion | 11 | CSS-in-JS engine powering MUI's `sx` prop and theme tokens |
+| Technology         | Version | Rationale                                                                             |
+| ------------------ | ------- | ------------------------------------------------------------------------------------- |
+| React              | 19      | Concurrent rendering, `use` hook, and improved Suspense support                       |
+| TypeScript         | 5.9     | Enforces domain model integrity and catches API contract drift at compile time        |
+| Vite               | 7       | Sub-second HMR and optimized production builds with native ESM                        |
+| Material UI (MUI)  | 7       | Accessible, themeable component library with built-in responsive utilities            |
+| MUI X Date Pickers | 8       | First-class date input components integrated with the MUI theme system                |
+| React Router       | 7       | File-based-compatible routing with `Outlet`-driven nested layouts                     |
+| date-fns           | 4       | Modular, tree-shakeable date utilities for relative and absolute timestamp formatting |
+| Emotion            | 11      | CSS-in-JS engine powering MUI's `sx` prop and theme tokens                            |
 
 **State Management:** React Context API — lightweight global state for parking data (`ParkingDataContext`) and color mode (`ColorModeContext`). No external state library is required at this scale.
 
@@ -134,13 +134,13 @@ All endpoints are mocked in `src/api/endpoint.ts` using an in-memory store. The 
 
 ### Endpoints
 
-| Function | Method | Description |
-|---|---|---|
-| `getZones()` | GET | Returns all parking zones |
-| `getZoneById(id)` | GET | Returns a single zone by ID; throws if not found |
-| `getVehiclesByZone(zoneId)` | GET | Returns all vehicles currently assigned to a zone |
-| `getLogs()` | GET | Returns the full officer activity log (session-persistent) |
-| `postAction(log)` | POST | Persists a new enforcement action; returns the created log with server-assigned ID |
+| Function                    | Method | Description                                                                        |
+| --------------------------- | ------ | ---------------------------------------------------------------------------------- |
+| `getZones()`                | GET    | Returns all parking zones                                                          |
+| `getZoneById(id)`           | GET    | Returns a single zone by ID; throws if not found                                   |
+| `getVehiclesByZone(zoneId)` | GET    | Returns all vehicles currently assigned to a zone                                  |
+| `getLogs()`                 | GET    | Returns the full officer activity log (session-persistent)                         |
+| `postAction(log)`           | POST   | Persists a new enforcement action; returns the created log with server-assigned ID |
 
 ### Data Models
 
@@ -164,10 +164,10 @@ interface Zone {
 interface Vehicle {
   id: string;
   licensePlate: string;
-  state: string;           // Registration state, e.g. "CA"
+  state: string; // Registration state, e.g. "CA"
   zoneId: string;
-  type: VehicleType;       // Passenger | Commercial | Motorcycle | Emergency | EV
-  arrivalTime: string;     // ISO 8601
+  type: VehicleType; // Passenger | Commercial | Motorcycle | Emergency | EV
+  arrivalTime: string; // ISO 8601
   timeLimitMinutes: number;
   isOverstayed: boolean;
   minutesRemaining: number;
@@ -181,10 +181,10 @@ interface Alert {
   id: string;
   zoneId: string;
   vehicleId: string;
-  type: ViolationType;     // ExpiredMeter | NoParkingZone | FireHydrant | PermitRequired | Overstay
+  type: ViolationType; // ExpiredMeter | NoParkingZone | FireHydrant | PermitRequired | Overstay
   severity: AlertSeverity; // Low | Medium | High
   description: string;
-  timestamp: string;       // ISO 8601
+  timestamp: string; // ISO 8601
 }
 ```
 
@@ -193,11 +193,11 @@ interface Alert {
 ```ts
 interface OfficerLog {
   id: string;
-  action: ActionType;      // Zone Check-in | Warning Issued | Citation Issued | General Note
+  action: ActionType; // Zone Check-in | Warning Issued | Citation Issued | General Note
   zoneId: string;
   vehicleId?: string;
-  licensePlate?: string;   // Denormalized for display — avoids a separate vehicle lookup
-  timestamp: string;       // ISO 8601
+  licensePlate?: string; // Denormalized for display — avoids a separate vehicle lookup
+  timestamp: string; // ISO 8601
   notes?: string;
   officerId: string;
 }
@@ -210,20 +210,34 @@ interface OfficerLog {
 ### Empty States
 
 **Via date filter (Activity page):**
+
 1. Navigate to **Activity**.
 2. Use the date picker to select any date with no logged activity.
 3. The feed renders the "No Activity Recorded" empty state.
 
 **Via Demo Mode toggle:**
+
 1. **Mobile:** Open the hamburger menu → scroll to **Developer Tools** → enable **Simulate Empty State**.
 2. **Desktop:** Click the officer avatar (top right) → **Developer Tools** → enable **Simulate Empty State**.
 3. A yellow banner — `DEMO MODE: EMPTY STATE ACTIVE` — appears below the AppBar on all pages.
 4. Both Dashboard and Activity display their empty state UI with a faded icon, heading, and description.
 5. Tap **Refresh Data** on either empty state to exit demo mode instantly.
 
+### Error States
+
+The mock API client (`src/api/client.ts`) intentionally injects a **10% random failure rate** on every request. Error states will trigger naturally through normal application use — no special setup required. When an error occurs:
+
+- The Dashboard and Zone Detail pages display an inline error alert with a **Retry** button.
+- The action form surfaces a form-level error alert if an enforcement action fails to submit.
+
+To force an error immediately, refresh the page or submit actions repeatedly until one fails.
+
 ### Loading States
 
+The mock API client simulates an **800ms network delay** on every request. All data-fetching surfaces use skeleton screens during this window — zone cards on the Dashboard, vehicle cards on Zone Detail, and log entries on Activity.
+
 The `VehicleActionForm` submit button uses a `loading` prop tied to the `isSubmitting` context flag. To observe it:
+
 1. Navigate to any zone via the Dashboard.
 2. Select a vehicle and submit an enforcement action — the button disables and enters a loading state for the duration of the simulated async delay.
 
