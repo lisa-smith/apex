@@ -1,6 +1,6 @@
 # Apex Parking Enforcement
 
-A mobile-first, adaptive web application for private patrol and parking enforcement officers. Apex provides real-time zone monitoring, smart timestamps, automated overstay detection, and a responsive officer activity feed — optimized for both field use on mobile devices and command-level review on desktop.
+A mobile-first, adaptive web application for private patrol and parking enforcement officers. Apex provides zone monitoring, smart timestamps, automated overstay detection, and a responsive officer activity feed — optimized for both field use on mobile devices and command-level review on desktop.
 
 ---
 
