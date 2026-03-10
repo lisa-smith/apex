@@ -240,7 +240,7 @@ Use Chrome DevTools device simulation to observe the responsive layout transitio
 
 1. Open DevTools (`F12` or `Cmd+Option+I` on macOS).
 2. Toggle Device Toolbar (`Cmd+Shift+M` on macOS / `Ctrl+Shift+M` on Windows).
-3. Set width **below 960px** to see the mobile layout: hamburger menu, compact AppBar, stacked zone cards.
-4. Set width to **960px or above** to see the desktop layout: inline navigation, two-column zone detail, avatar profile menu.
+3. Set width **below 900px** to see the mobile layout: hamburger menu, compact AppBar, stacked zone cards.
+4. Set width to **900px or above** to see the desktop layout: inline navigation, two-column zone detail, avatar profile menu.
 
 The minimum supported mobile width is **375px** (iPhone SE / standard small phone viewport).
