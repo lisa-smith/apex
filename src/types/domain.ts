@@ -19,9 +19,9 @@ export enum ViolationType {
 }
 
 export enum AlertSeverity {
-  Low = "Low", // e.g., 5 mins remaining
-  Medium = "Medium", // e.g., Just expired
-  High = "High", // e.g., Fire hydrant or 30+ min overstay
+  Low = "Low",
+  Medium = "Medium",
+  High = "High",
 }
 
 export enum ActionType {
